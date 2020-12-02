@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Neovis.js Simple Example</title>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <style type="text/css">
+        html, body {
+            font-family: Helvetica;
+			font-size: 10px;
+        }
+
+        #viz {
+            width: 400px;
+            height: 400px;
+            border: 0.5px solid lightgray;
+			font-family: Helvetica;
+			font-size: 20px;
+			margin: 10px;
+        }
+
+    </style>
+
+    <script type="text/javascript" src="/static/neovis.js"></script>
+
+
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+		// define config car
+		// instantiate nodevis object
+		// draw
+
+		var viz;
+
+		function draw() {
+			var config = {
+				container_id: "viz",
+				server_url: "bolt://100.25.31.222:33089",
+				server_user: "neo4j",
+				server_password: "seventies-shipping-checkouts",
+				labels: {
+					"Subject": {
+						"caption": "name",
+						"community":"Red",
+						"font":{
+							"size":20,
+							"color":"#FF6A33"	
+						},
+						"title_properties": [
+                            "name"
+                        ]
+					},
+					"Object": {	
+						"caption": "name",
+						"font":{
+							"size":20,
+							"color":"#335AFF"	
+						},
+						"title_properties": [
+                            "name"
+                        ]
+					}
+				},
+				relationships: {
+					"have_a_special_dish": {
+						"caption": true,
+						"font":{
+							"size":20,
+							"color":"#33DCFF"	
+						}
+					}
+				},
+				initial_cypher: 'match (n)-[r:co_mon_an_dac_san]->(m) return * limit 10',
+
+				arrows: true,
+                hierarchical_layout:true,
+                hierarchical_sort_method:"directed",				
+			};
+
+			viz = new NeoVis.default(config);
+			viz.render();
+			console.log(viz);
+
+		}
+    </script>
+</head>
+<body onload="draw()">
+
+<div class="grid-container">
+	<form>
+		<label for="head">Head:</label>
+		<input type="text" id="head" name="heads"><br>
+		<label for="rela">Relation:</label>
+		<input type="text" id="rela" name="relas"><br>
+		<label for="tail">Tail:</label>
+		<input type="text" id="tail" name="tails"><br>
+	</form>
+</div>
+
+<div id="viz"></div>
+
+<textarea rows="4" cols=50 id="cypher"></textarea><br>
+<input type="submit" value="Query" id="reload">
+<!--<input type="submit" value="Stabilize" id="stabilize">-->
+
+<!--<script type="text/javascript">
+	function getOption(){
+		// load selections from HTML controls into JS variables
+		selectElementHead = document.querySelector('#head')
+		selectElementRelation = document.querySelector('#relation')
+		selectElementTail = document.querySelector('#tail')
+
+		// load the values selected for the scoring parameters into JS variables 
+		head_string = selectElementHead.options[selectElementHead.selectedIndex].value
+		relation_string = selectElementRelation.options[selectElementRelation.selectedIndex].value
+		tail_string = selectElementTail.options[selectElementTail.selectedIndex].value
+		
+	}
+</script>-->
+</body>
+
+<script>
+	$("#reload").click(function() {
+
+		var cypher = $("#cypher").val();
+
+		if (cypher.length > 3) {
+			viz.renderWithCypher(cypher);
+		} else {
+			console.log("reload");
+			viz.reload();
+
+		}
+
+	});
+
+	$("#stabilize").click(function() {
+		viz.stabilize();
+	})
+
+</script>
+</html>

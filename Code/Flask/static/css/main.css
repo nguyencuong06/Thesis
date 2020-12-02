@@ -1,0 +1,18 @@
+body {
+    font-family: Helvetica;
+    font-size: 15px;
+}
+.grid-container form{
+    display: flex;
+    flex-direction: row;
+}
+.grid-container form label{
+    display: block;
+    padding: 10px;
+    font-family: Helvetica;
+    font-size: 15px;
+}
+.grid-container form label input{
+    padding: 5px 5px 5px 5px;
+
+}
