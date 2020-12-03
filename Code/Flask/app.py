@@ -15,8 +15,8 @@ from neo4j.exceptions import Neo4jError, ServiceUnavailable
 import neo4j.time
 
 DATABASE_USERNAME = ('neo4j')
-DATABASE_PASSWORD = ('salt-emitters-liver')
-DATABASE_URL = ('bolt://52.201.184.95:33649')
+DATABASE_PASSWORD = ('seventies-shipping-checkouts')
+DATABASE_URL = ('bolt://100.25.31.222:33089')
 driver = GraphDatabase.driver(DATABASE_URL, auth=basic_auth(DATABASE_USERNAME, str(DATABASE_PASSWORD)))
 app = Flask(__name__)
 api = Api(app, title='DemoNeo4j', api_version='1.1.2')
@@ -50,23 +50,21 @@ pipeline1_path = os.path.join(pipeline_path, pipeline1_filename)
 pipeline2_path = os.path.join(pipeline_pth, pipeline2_filename)
 model_path = os.path.join(get_path('models'), models_filename)'''
 
-
-
 @app.route('/', methods=['GET'])
 def final():
     #session =  driver.session()
     #friends = session.read_transaction(get_data, "Cameron Crowe")        
     return render_template('base.html')
 
-'''@app.route('/')
+@app.route('/')
 def about():
     #Get value from front-end
     value = {}
-    value['head'] = request.args.get('head')
-    value['relation'] = request.args.get('relation')
-    value['tail'] = request.args.get('tail')
+    value['Head'] = request.args.get('head')
+    value['Relation'] = request.args.get('rela')
+    value['Tail'] = request.args.get('tail')
     for ele in value:
-        logging.warning("value for "+ele+" is: "+str(value[ele]))'''
+        logging.warning("value for "+ele+" is: "+str(value[ele]))
 
 if __name__ == "__main__":
     app.run(debug=True)  
