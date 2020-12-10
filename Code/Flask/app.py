@@ -31,8 +31,8 @@ from preprocess import extract_features
 import neo4j.time
 
 DATABASE_USERNAME = ('neo4j')
-DATABASE_PASSWORD = ('rock-airs-lanes')
-DATABASE_URL = ('bolt://18.235.243.145:33780')
+DATABASE_PASSWORD = ('steamers-relay-edge')
+DATABASE_URL = ('bolt://52.86.147.25:35305')
 template_dir = 'C:/Users/nguye/Documents/Thesis_git/Code/Flask/templates'
 driver = GraphDatabase.driver(DATABASE_URL, auth=basic_auth(DATABASE_USERNAME, str(DATABASE_PASSWORD)))
 app = Flask(__name__, template_folder=template_dir)
