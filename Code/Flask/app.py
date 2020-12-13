@@ -31,8 +31,8 @@ from preprocess import extract_features
 import neo4j.time
 
 DATABASE_USERNAME = ('neo4j')
-DATABASE_PASSWORD = ('steamers-relay-edge')
-DATABASE_URL = ('bolt://52.86.147.25:35305')
+DATABASE_PASSWORD = ('summer-purchases-starts')
+DATABASE_URL = ('bolt://52.4.89.242:37724')
 template_dir = 'C:/Users/nguye/Documents/Thesis_git/Code/Flask/templates'
 driver = GraphDatabase.driver(DATABASE_URL, auth=basic_auth(DATABASE_USERNAME, str(DATABASE_PASSWORD)))
 app = Flask(__name__, template_folder=template_dir)
@@ -135,7 +135,7 @@ def about():
     logging.warning(subj)
     #loadBERT
     tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False)
-    model = torch.load('./model/model.pth')
+    model = torch.load('C:/Users/nguye/Documents/Thesis/model/model.pth')
     #variable_prepare
     examples = []
     examples.append(InputExample(text_a = subj, text_b = re, text_c = obj, label="1"))
@@ -151,10 +151,10 @@ def about():
     input_mask = input_mask.to(device)
     segment_ids = segment_ids.to(device)
     output = model(input_ids, segment_ids, input_mask, labels=None)
-    output = torch.nn.Sigmoid()(output[0]).cpu().detach().numpy()
+    output = torch.nn.Softmax()(output[0]).cpu().detach().numpy()
     logging.warning(output)
 
-    if output[0] >= 0.5:
+    if output[1] >= 0.5:
         predicted_string =  'Correct. This triple is exist in a sentence'
     else:
         predicted_string = 'Not Correct. This triple is not exist in a sentence'
