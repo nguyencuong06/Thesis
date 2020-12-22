@@ -1,7 +1,7 @@
 import os
 import re
 import logging
-import requests
+#import requests
 #import yaml
 import datetime
 import torch
@@ -31,8 +31,8 @@ from preprocess import extract_features
 import neo4j.time
 
 DATABASE_USERNAME = ('neo4j')
-DATABASE_PASSWORD = ('summer-purchases-starts')
-DATABASE_URL = ('bolt://52.4.89.242:37724')
+DATABASE_PASSWORD = ('soil-foreground-vehicle')
+DATABASE_URL = ('bolt://52.91.160.133:34697')
 template_dir = 'C:/Users/nguye/Documents/Thesis_git/Code/Flask/templates'
 driver = GraphDatabase.driver(DATABASE_URL, auth=basic_auth(DATABASE_USERNAME, str(DATABASE_PASSWORD)))
 app = Flask(__name__, template_folder=template_dir)
@@ -75,24 +75,23 @@ def close_db(error):
         g.neo4j_db.close()
 
 @app.route('/')
-def final():
-    #session =  driver.session()
-    #friends = session.read_transaction(get_data, "Cameron Crowe")        
+def final():      
     return render_template('base.html')
 
-
-
+# The result of classification will appeared in result.html
 @app.route('/result.html/')
 def about():
     '''
     Get value from front-end
     Search in Neo4j to get their description as an input for model
     '''
+    #get value from front-end
     value = {}
     value['Subject'] = request.args.get('subject')
     value['Relation'] = request.args.get('rela')
     value['Object'] = request.args.get('object')
     
+    # Querying in Neo4j
     def get_subjects(tx, s_name):
         def s_query(tx, s_name):
             result = tx.run(
@@ -145,7 +144,7 @@ def about():
     input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
     segment_ids = torch.tensor([f.segment_ids for f in features], dtype=torch.long)
     label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
-    #Process
+    #Processing
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     input_ids = input_ids.to(device)
     input_mask = input_mask.to(device)
@@ -159,8 +158,12 @@ def about():
     else:
         predicted_string = 'Not Correct. This triple is not exist in a sentence'
     
+    # What variable will be returned to second page
     prediction = {'prediction_key': predicted_string}
-
-    return (render_template('/result.html', prediction=prediction))
+    subjects = {'subject_key': value['Subject']}
+    relation = {'relation_key':value['Relation']}
+    objects = {'object_key':value['Object']}
+    print(objects['object_key'])
+    return (render_template('/result.html', prediction=prediction, subjects=subjects, relation=relation, objects=objects))
 if __name__ == "__main__":
     app.run(debug=True) 
