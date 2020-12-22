@@ -1,31 +1,123 @@
+
 <!DOCTYPE html> 
 <head> 
 	<title> 
 		Page for showing prediction 
 	</title> 
 	<link rel="stylesheet" href="/static/css/main.css">
+	<style type="text/css">
+        html, body {
+            font-family: Helvetica;
+			font-size: 10px;
+        }
+
+        #viz {
+            width: 400px;
+            height: 400px;
+            border: 0.5px solid lightgray;
+			font-family: Helvetica;
+			font-size: 20px;
+			margin: 10px;
+        }
+
+	</style>
+	<script type="text/javascript" src="/static/neovis.js"></script>
+	<script
+	src="https://code.jquery.com/jquery-3.2.1.min.js"
+	integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+	crossorigin="anonymous"></script>
+
+	<script type="text/javascript">
+	// define config car
+	// instantiate nodevis object
+	// draw
+
+		var viz; 
+		function draw() {
+			var s = '{{ subjects.subject_key }}';
+			var r = '{{ relation.relation_key }}';
+			var o = '{{ objects.object_key }}';
+			if (!String.format) {
+				String.format = function(format) {
+				var args = Array.prototype.slice.call(arguments, 1);
+				return format.replace(/{(\d+)}/g, function(match, number) { 
+					return typeof args[number] != 'undefined'
+					? args[number] 
+					: match
+					;
+					});
+				};
+			}
+			var config = {
+				container_id: "viz",
+
+				server_url: "bolt://52.91.160.133:34697",
+				server_user: "neo4j",
+				server_password: "soil-foreground-vehicle",
+
+				labels: {
+					"Subject": {
+						"caption": "name",
+						"community":"Red",
+						"font":{
+							"size":20,
+							"color":"#FF6A33"	
+						},
+						"title_properties": [
+							"name"
+						]
+					},
+					"Object": {	
+						"caption": "name",
+						"font":{
+							"size":20,
+							"color":"#335AFF"	
+						},
+						"title_properties": [
+							"name"
+						]
+					}
+				},
+				relationships: {
+					"have_a_special_dish": {
+						"caption": true,
+						"font":{
+							"size":20,
+							"color":"#33DCFF"	
+						}
+					}
+				},
+				initial_cypher: String.format("match (s:Subject)-[r:co_mon_an_dac_san]->(friends) where s.name = '{0}' and friends.name = '{1}' return s, r,friends", s, o),
+				arrows: true,
+				hierarchical_layout:true,
+				hierarchical_sort_method:"directed",				
+			};
+			viz = new NeoVis.default(config);
+			viz.render();
+			console.log(viz);
+
+		}
+	</script>
 </head> 
 
-<body> 
+<body onload="draw()"> 
 <!-- display the prediction  -->
-<div class="result">
-	<h1 style="color: green"> 
-		Here is the prediction for your triple:
-	</h1> 
-	<h1 style="color: green"> 
-		{{ prediction.prediction_key }}
-	</h1>
+	<div class="result">
+		<h1 style="color: green"> 
+			Here is the prediction for your triple:
+		</h1> 
+		<h1 style="color: green"> 
+			{{ prediction.prediction_key }}
+		</h1>
 
-	
-<!-- link back to home.html for entering scoring parameters for another prediction  -->
-	<form action="/Users/nguye/Documents/Thesis_git/Code/Flask/templates/base.html">
-		<input type="submit" value="Get another prediction" style="font-size : 20px; width: 25%; height: 30px;"/>
-	</form>
-	
-</div>
+		
+	<!-- link back to home.html for entering scoring parameters for another prediction  -->
+		<form action="base.html">
+			<input type="submit" value="Get another prediction" style="font-size : 20px; width: 25%; height: 30px;"/>
+		</form>
+	</div>
+
+	<div id="viz"></div>
+
 </body> 
-
-
-
-
 </html>		
