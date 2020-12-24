@@ -31,11 +31,11 @@ from preprocess import extract_features
 import neo4j.time
 
 DATABASE_USERNAME = ('neo4j')
-DATABASE_PASSWORD = ('soil-foreground-vehicle')
-DATABASE_URL = ('bolt://52.91.160.133:34697')
-template_dir = 'C:/Users/nguye/Documents/Thesis_git/Code/Flask/templates'
+DATABASE_PASSWORD = ('stability-generators-multitask')
+DATABASE_URL = ('bolt://34.207.188.109:33393')
+# template_dir = 'D:/university/uit/thesis/code/tmp/Thesis/templates/'
 driver = GraphDatabase.driver(DATABASE_URL, auth=basic_auth(DATABASE_USERNAME, str(DATABASE_PASSWORD)))
-app = Flask(__name__, template_folder=template_dir)
+app = Flask(__name__)
 CORS(app)
 FlaskJSON(app)
 api = Api(app, title='DemoNeo4j', api_version='1.1.2')
@@ -134,7 +134,7 @@ def about():
     logging.warning(subj)
     #loadBERT
     tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False)
-    model = torch.load('C:/Users/nguye/Documents/Thesis/model/model.pth')
+    model = torch.load('D:/university/uit/thesis/an_cuong/final/model/model.pth')
     #variable_prepare
     examples = []
     examples.append(InputExample(text_a = subj, text_b = re, text_c = obj, label="1"))
@@ -165,5 +165,6 @@ def about():
     objects = {'object_key':value['Object']}
     print(objects['object_key'])
     return (render_template('/result.html', prediction=prediction, subjects=subjects, relation=relation, objects=objects))
+
 if __name__ == "__main__":
     app.run(debug=True) 
